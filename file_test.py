@@ -5,7 +5,7 @@ def test_calc_addition():
     output = 2 + 4 
     assert output == 6
 
-If you need further assistance, feel free to ask!
+# If you need further assistance, feel free to ask!
 
 def test_calc_subtraction():  
     # Function to test the output of 2 - 4
