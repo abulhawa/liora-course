@@ -12,5 +12,6 @@ jobs:
       - name: multiline script
         run: |
           python3 -V
+          pwd
           touch my_file_with_workflow.py
           ls -l
