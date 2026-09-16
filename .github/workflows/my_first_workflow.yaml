@@ -25,7 +25,7 @@ jobs:
         shell: bash
       - name: print some default env variables
         run: |
-          echo "HOME: ${HOME}"
+          echoo "HOME: ${HOME}"
           echo "GITHUB_WORKFLOW: ${GITHUB_WORKFLOW}"
           echo "GITHUB_ACTION: ${GITHUB_ACTION}"
           echo "GITHUB_ACTIONS: ${GITHUB_ACTIONS}"
