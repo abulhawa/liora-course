@@ -1,4 +1,4 @@
-name: Pytest & flake8 control Push
+name: Pytest & Ruff control Push
 on: push
 jobs:
   qa:
@@ -13,14 +13,14 @@ jobs:
         with:
           python-version: "3.x"
       
-      - name: Install pytest and flake8
+      - name: Install pytest and Ruff
         run: |
           pip install pytest
-          pip install flake8
+          pip install ruff
 
       - name: Run tests
         run: |
           pytest
 
-      - name: Run flake8
-        uses: py-actions/flake8@v2
+      - name: Run Ruff
+        run: ruff check .
