@@ -1,48 +1,63 @@
-from fastapi import FastAPI, Header
-from pydantic import BaseModel
-from typing import Optional
+import datetime
+from typing import Any
 
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
 
-class Computer(BaseModel):
-    computerid: int
-    cpu: Optional[str]
-    gpu: Optional[str]
-    price: float
+api = FastAPI()
+data = [1, 2, 3, 4, 5]
+
+# @api.get('/data')
+# def get_data(index):
+#     try:
+#         return {
+#             'data': data[int(index)]
+#         }
+#     except IndexError:
+#         raise HTTPException(
+#             status_code=404,
+#             detail='Unknown Index')
+#     except ValueError:
+#         raise HTTPException(
+#             status_code=400,
+#             detail='Bad Type'
+#         )
+
+class MyException(Exception):
+    def __init__(self,                 
+                 name : str,
+                 date: str):
+        self.name = name
+        self.date = date
+@api.exception_handler(MyException)
+def MyExceptionHandler(
+    request: Request,
+    exception: MyException
+    ):
+    return JSONResponse(
+        status_code=418,
+        content={
+            'url': str(request.url),
+            'name': exception.name,
+            'message': 'This error is my own', 
+            'date': exception.date
+        }
+    )
+@api.get('/my_custom_exception')
+def get_my_custom_exception():
+    raise MyException(
+      name='my error',
+    date=str(datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(hours=2))))
+      )
     
-api = FastAPI(openapi_tags=[
-    {
-        'name': 'home',
-        'description': 'default functions'
-    },
-    {
-        'name': 'items',
-        'description': 'functions that are used to deal with items'
-    }
-])
-
-
-@api.get('/', summary='Hello World', tags=['home'])
-def get_index():
-    """Returns greetings
-    """
-    return {'greetings': 'welcome'}
-
-@api.put('/computer', name='Create a new computer')
-def get_computer(computer: Computer):
-    """Creates a new computer within the database
-    """
-    return computer
-
-@api.get('/custom', name='Get custom header')
-def get_content(custom_header: Optional[str] = Header(None, description='My own personal header')):
+responses: dict[int | str, dict[str, Any]] = {
+    200: {"description": "OK"},
+    404: {"description": "Item not found"},
+    302: {"description": "The item was moved"},
+    403: {"description": "Not enough privileges"},
+}
+@api.get('/thing', responses=responses)
+def get_thing():
     return {
-        'Custom-Header': custom_header
-    }
-    
-@api.get('/items', tags=['home', 'items'])
-def get_items():
-    """returns an item
-    """
-    return {
-        'item': "some item"
+        'data': 'hello world'
     }
